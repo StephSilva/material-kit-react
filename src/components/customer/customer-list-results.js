@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
   Table,
@@ -15,18 +16,24 @@ import {
   TableRow,
   Typography
 } from '@mui/material';
-import { getInitials } from '../../utils/get-initials';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import instanciaAxios from 'src/utils/instancia-axios';
+import { toast } from "react-toastify"
+import EditarClienteModal from './EditarCliente';
 
-export const CustomerListResults = ({ customers, ...rest }) => {
+export const CustomerListResults = ({ clientes, refrescar, ...rest }) => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(25);
+  const [editarCliente, setEditarCliente] = useState(null);
+  const [abrirModal, setAbrirModal] = useState(false);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = (event) => {
     let newSelectedCustomerIds;
 
     if (event.target.checked) {
-      newSelectedCustomerIds = customers.map((customer) => customer.id);
+      newSelectedCustomerIds = clientes.map((customer) => customer.id);
     } else {
       newSelectedCustomerIds = [];
     }
@@ -62,6 +69,27 @@ export const CustomerListResults = ({ customers, ...rest }) => {
     setPage(newPage);
   };
 
+  const editar = (id) => {
+    setEditarCliente(id);
+    setAbrirModal(true);
+  }
+
+  const borrar = async (id) => {
+    try {
+      await instanciaAxios.delete(`/cliente/${id}`);
+      toast.success("Cliente dado de baja correctamente")
+      refrescar();
+    } catch (error) {
+      toast.error("Error al dar de baja al cliente")
+    }
+  }
+
+  const handleClose = () => {
+    setAbrirModal(false);
+    setEditarCliente(null);
+    refrescar();
+  }
+
   return (
     <Card {...rest}>
       <PerfectScrollbar>
@@ -71,43 +99,43 @@ export const CustomerListResults = ({ customers, ...rest }) => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
+                    checked={selectedCustomerIds.length === clientes.length}
                     color="primary"
                     indeterminate={
                       selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
+                      && selectedCustomerIds.length < clientes.length
                     }
                     onChange={handleSelectAll}
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  Nombre
                 </TableCell>
                 <TableCell>
-                  Email
+                  Ruc
                 </TableCell>
                 <TableCell>
-                  Location
+                  Telefono
                 </TableCell>
                 <TableCell>
-                  Phone
+                  Fecha Creacion
                 </TableCell>
                 <TableCell>
-                  Registration date
+                  Acciones
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.slice(0, limit).map((customer) => (
+              {clientes.slice(0, limit).map((cliente) => (
                 <TableRow
                   hover
-                  key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
+                  key={cliente.id}
+                  selected={selectedCustomerIds.indexOf(cliente.id) !== -1}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, customer.id)}
+                      checked={selectedCustomerIds.indexOf(cliente.id) !== -1}
+                      onChange={(event) => handleSelectOne(event, cliente.id)}
                       value="true"
                     />
                   </TableCell>
@@ -118,31 +146,32 @@ export const CustomerListResults = ({ customers, ...rest }) => {
                         display: 'flex'
                       }}
                     >
-                      <Avatar
-                        src={customer.avatarUrl}
-                        sx={{ mr: 2 }}
-                      >
-                        {getInitials(customer.name)}
-                      </Avatar>
                       <Typography
                         color="textPrimary"
                         variant="body1"
                       >
-                        {customer.name}
+                        {cliente.nombre}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {customer.email}
+                    {cliente.ruc}
                   </TableCell>
                   <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
+                    {cliente.telefono}
                   </TableCell>
                   <TableCell>
-                    {customer.phone}
+                    {format(new Date(cliente.fechaCreacion), "dd-MM-yyyy")}
                   </TableCell>
                   <TableCell>
-                    {format(customer.createdAt, 'dd/MM/yyyy')}
+                    <Button
+                      startIcon={(<EditIcon style={{ color: "blue" }} onClick={() => editar(cliente.id)} />)}
+                      sx={{ mr: 1 }}
+                    />
+                    <Button
+                      startIcon={(<DeleteIcon style={{ color: "red" }} onClick={() => borrar(cliente.id)} />)}
+                      sx={{ mr: 1 }}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -152,17 +181,19 @@ export const CustomerListResults = ({ customers, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={customers.length}
+        count={clientes.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 25]}
       />
+      <EditarClienteModal id={editarCliente} open={abrirModal} handleClose={handleClose} />
     </Card>
   );
 };
 
 CustomerListResults.propTypes = {
-  customers: PropTypes.array.isRequired
+  clientes: PropTypes.array.isRequired,
+  refrescar: PropTypes.func.isRequired
 };

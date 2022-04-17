@@ -6,6 +6,8 @@ import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import { theme } from '../theme';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -27,6 +29,7 @@ const App = (props) => {
       </Head>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
+          <ToastContainer />
           <CssBaseline />
           {getLayout(<Component {...pageProps} />)}
         </ThemeProvider>

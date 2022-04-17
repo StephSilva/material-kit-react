@@ -7,72 +7,70 @@ import {
   InputAdornment,
   SvgIcon, Typography
 } from '@mui/material';
+import { useState } from 'react';
 import { Search as SearchIcon } from '../../icons/search';
-import { Upload as UploadIcon } from '../../icons/upload';
-import { Download as DownloadIcon } from '../../icons/download';
+import CrearClienteModal from './CrearCliente';
 
-export const CustomerListToolbar = (props) => (
-  <Box {...props}>
-    <Box
-      sx={{
-        alignItems: 'center',
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        m: -1
-      }}
-    >
-      <Typography
-        sx={{ m: 1 }}
-        variant="h4"
+export const CustomerListToolbar = (props) => {
+  const [abrirModal, setAbrirModal] = useState(false);
+
+  return (
+    <Box {...props}>
+      <CrearClienteModal open={abrirModal} handleClose={() => {
+        setAbrirModal(false)
+        props.refrescar();
+      }} />
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          m: -1
+        }}
       >
-        Customers
-      </Typography>
-      <Box sx={{ m: 1 }}>
-        <Button
-          startIcon={(<UploadIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
+        <Typography
+          sx={{ m: 1 }}
+          variant="h4"
         >
-          Import
-        </Button>
-        <Button
-          startIcon={(<DownloadIcon fontSize="small" />)}
-          sx={{ mr: 1 }}
-        >
-          Export
-        </Button>
-        <Button
-          color="primary"
-          variant="contained"
-        >
-          Add Customers
-        </Button>
+          Clientes
+        </Typography>
+        <Box sx={{ m: 1 }}>
+          <Button
+            color="primary"
+            variant="contained"
+          >
+            <span onClick={() => setAbrirModal(true)}>
+              Agregar Cliente
+            </span>
+          </Button>
+        </Box>
+      </Box>
+      <Box sx={{ mt: 3 }}>
+        <Card>
+          <CardContent>
+            <Box sx={{ maxWidth: 500 }}>
+              <TextField
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SvgIcon
+                        color="action"
+                        fontSize="small"
+                      >
+                        <SearchIcon />
+                      </SvgIcon>
+                    </InputAdornment>
+                  )
+                }}
+                placeholder="Buscar cliente"
+                variant="outlined"
+              />
+            </Box>
+          </CardContent>
+        </Card>
       </Box>
     </Box>
-    <Box sx={{ mt: 3 }}>
-      <Card>
-        <CardContent>
-          <Box sx={{ maxWidth: 500 }}>
-            <TextField
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SvgIcon
-                      color="action"
-                      fontSize="small"
-                    >
-                      <SearchIcon />
-                    </SvgIcon>
-                  </InputAdornment>
-                )
-              }}
-              placeholder="Search customer"
-              variant="outlined"
-            />
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
-  </Box>
-);
+  );
+}

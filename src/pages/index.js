@@ -1,116 +1,60 @@
 import Head from 'next/head';
-import { Box, Container, Grid } from '@mui/material';
-import { Budget } from '../components/dashboard/budget';
-import { LatestOrders } from '../components/dashboard/latest-orders';
-import { LatestProducts } from '../components/dashboard/latest-products';
-import { Sales } from '../components/dashboard/sales';
-import { TasksProgress } from '../components/dashboard/tasks-progress';
-import { TotalCustomers } from '../components/dashboard/total-customers';
-import { TotalProfit } from '../components/dashboard/total-profit';
-import { TrafficByDevice } from '../components/dashboard/traffic-by-device';
+import { Box, Container } from '@mui/material';
+import { CustomerListResults } from '../components/customer/customer-list-results';
+import { CustomerListToolbar } from '../components/customer/customer-list-toolbar';
 import { DashboardLayout } from '../components/dashboard-layout';
+import { customers } from '../__mocks__/customers';
+import { useEffect, useState } from 'react';
+import instanciaAxios from 'src/utils/instancia-axios';
+import { toast } from 'react-toastify';
 
-const Dashboard = () => (
-  <>
-    <Head>
-      <title>
-        Dashboard | Material Kit
-      </title>
-    </Head>
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8
-      }}
-    >
-      <Container maxWidth={false}>
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            lg={3}
-            sm={6}
-            xl={3}
-            xs={12}
-          >
-            <Budget />
-          </Grid>
-          <Grid
-            item
-            xl={3}
-            lg={3}
-            sm={6}
-            xs={12}
-          >
-            <TotalCustomers />
-          </Grid>
-          <Grid
-            item
-            xl={3}
-            lg={3}
-            sm={6}
-            xs={12}
-          >
-            <TasksProgress />
-          </Grid>
-          <Grid
-            item
-            xl={3}
-            lg={3}
-            sm={6}
-            xs={12}
-          >
-            <TotalProfit sx={{ height: '100%' }} />
-          </Grid>
-          <Grid
-            item
-            lg={8}
-            md={12}
-            xl={9}
-            xs={12}
-          >
-            <Sales />
-          </Grid>
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xl={3}
-            xs={12}
-          >
-            <TrafficByDevice sx={{ height: '100%' }} />
-          </Grid>
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xl={3}
-            xs={12}
-          >
-            <LatestProducts sx={{ height: '100%' }} />
-          </Grid>
-          <Grid
-            item
-            lg={8}
-            md={12}
-            xl={9}
-            xs={12}
-          >
-            <LatestOrders />
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
-  </>
-);
+const Customers = () => {
+  const [clientes,setClientes]=useState([]);
 
-Dashboard.getLayout = (page) => (
+  useEffect(() => {
+    obtenerClientes();
+  },[])
+
+  const obtenerClientes = async () => {
+    try {
+      const clientes = await instanciaAxios.get("/cliente");
+      setClientes(clientes.data);
+      if(clientes.data.length === 0){
+        toast.warning("No se encontraron clientes")
+      }
+    } catch (error) {
+      toast.error("Error al obtener los clientes")
+    }
+
+  }
+  return (
+    <>
+      <Head>
+        <title>
+          Clientes
+        </title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8
+        }}
+      >
+        <Container maxWidth={false}>
+          <CustomerListToolbar refrescar={obtenerClientes} />
+          <Box sx={{ mt: 3 }}>
+            <CustomerListResults clientes={clientes} refrescar={obtenerClientes} />
+          </Box>
+        </Container>
+      </Box>
+    </>
+  )
+};
+Customers.getLayout = (page) => (
   <DashboardLayout>
     {page}
   </DashboardLayout>
 );
 
-export default Dashboard;
+export default Customers;
