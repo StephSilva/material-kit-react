@@ -23,6 +23,11 @@ const items = [
     title: 'Clientes'
   },
   {
+    href: '/usuarios',
+    icon: (<UsersIcon fontSize="small" />),
+    title: 'Usuarios'
+  },
+  {
     href: '/products',
     icon: (<ShoppingBagIcon fontSize="small" />),
     title: 'Products'

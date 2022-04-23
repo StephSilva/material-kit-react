@@ -25,8 +25,8 @@ const Customers = () => {
     } catch (error) {
       toast.error("Error al obtener los clientes")
     }
-
   }
+
   return (
     <>
       <Head>
