@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import PropTypes from 'prop-types';
-import { format } from 'date-fns';
+import { useState } from "react";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import PropTypes from "prop-types";
+import { format } from "date-fns";
 import {
   Avatar,
   Box,
@@ -14,12 +14,12 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import instanciaAxios from 'src/utils/instancia-axios';
-import { toast } from "react-toastify"
+  Typography,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import instanciaAxios from "src/utils/instancia-axios";
+import { toast } from "react-toastify";
 // import EditarClienteModal from './EditarCliente';
 
 export const TablaDeUsuarios = ({ informacion, refrescar, editar, ...rest }) => {
@@ -37,12 +37,12 @@ export const TablaDeUsuarios = ({ informacion, refrescar, editar, ...rest }) => 
   const borrar = async (id) => {
     try {
       await instanciaAxios.delete(`/usuario/${id}`);
-      toast.success("Usuario dado de baja correctamente")
+      toast.success("Usuario dado de baja correctamente");
       refrescar();
     } catch (error) {
-      toast.error("Error al dar de baja al usuario")
+      toast.error("Error al dar de baja al usuario");
     }
-  }
+  };
 
   return (
     <Card {...rest}>
@@ -51,62 +51,41 @@ export const TablaDeUsuarios = ({ informacion, refrescar, editar, ...rest }) => 
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  Nombre
-                </TableCell>
-                <TableCell>
-                  Nombre de usuario
-                </TableCell>
-                <TableCell>
-                  Rol
-                </TableCell>
-                <TableCell>
-                  Fecha Creacion
-                </TableCell>
-                <TableCell>
-                  Acciones
-                </TableCell>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Nombre de usuario</TableCell>
+                <TableCell>Rol</TableCell>
+                <TableCell>Fecha Creacion</TableCell>
+                <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {informacion.slice(0, limit).map((fila) => (
-                <TableRow
-                  hover
-                  
-                >
-                  
+                <TableRow hover>
                   <TableCell>
                     <Box
                       sx={{
-                        alignItems: 'center',
-                        display: 'flex'
+                        alignItems: "center",
+                        display: "flex",
                       }}
                     >
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
+                      <Typography color="textPrimary" variant="body1">
                         {fila.nombre}
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell>
-                    {fila.nombreUsuario}
-                  </TableCell>
-                  <TableCell>
-                    {fila.rol.nombre}
-                  </TableCell>
-                  <TableCell>
-                    {format(new Date(fila.fechaCreacion), "dd-MM-yyyy")}
-                  </TableCell>
+                  <TableCell>{fila.nombreUsuario}</TableCell>
+                  <TableCell>{fila.rol.nombre}</TableCell>
+                  <TableCell>{format(new Date(fila.fechaCreacion), "dd-MM-yyyy")}</TableCell>
                   <TableCell>
                     <Button
-                      startIcon={(<EditIcon style={{ color: "blue" }} onClick={() => editar(fila.id)} />)}
+                      startIcon={<EditIcon style={{ color: "blue" }} />}
+                      onClick={() => editar(fila.id)}
                       sx={{ mr: 1 }}
                     />
                     <Button
-                      startIcon={(<DeleteIcon style={{ color: "red" }} onClick={() => borrar(fila.id)} />)}
+                      startIcon={<DeleteIcon style={{ color: "red" }} />}
                       sx={{ mr: 1 }}
+                      onClick={() => borrar(fila.id)}
                     />
                   </TableCell>
                 </TableRow>
@@ -131,5 +110,5 @@ export const TablaDeUsuarios = ({ informacion, refrescar, editar, ...rest }) => 
 
 TablaDeUsuarios.propTypes = {
   informacion: PropTypes.array.isRequired,
-  refrescar: PropTypes.func.isRequired
+  refrescar: PropTypes.func.isRequired,
 };
