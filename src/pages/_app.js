@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import { RouteGuard } from "src/components/RouteGuard";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -28,7 +29,11 @@ const App = (props) => {
         <ThemeProvider theme={theme}>
           <ToastContainer />
           <CssBaseline />
-          {getLayout(<Component {...pageProps} />)}
+          {getLayout(
+            <RouteGuard>
+              <Component {...pageProps} />
+            </RouteGuard>
+          )}
         </ThemeProvider>
       </LocalizationProvider>
     </CacheProvider>
