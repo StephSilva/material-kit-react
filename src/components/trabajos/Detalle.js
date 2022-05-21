@@ -21,8 +21,9 @@ import { AgGridReact } from "ag-grid-react";
 import { AddCircleOutlined } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { SelectRenderer } from "../GridCellRenderers";
+import { InputNumericRenderer, SelectRenderer } from "../GridCellRenderers";
 import { isEmpty } from "lodash";
+import StatusBarComponent from "../statusbar";
 
 const useStyles = makeStyles({
   cardHeader: {
@@ -120,8 +121,12 @@ export const Detalle = (props) => {
 
   const columnDefs = useMemo(
     () => [
-      { field: "cantidad" },
-      { field: "precio" },
+      {
+        field: "cantidad", cellRenderer: "inputNumericRenderer", editable: false, cellRendererParams: {
+          noPrefix: true,
+        }
+      },
+      { field: "precio", cellRenderer: "inputNumericRenderer", editable: false },
       {
         field: "tipoTrabajoId",
         headerName: "Servicio",
@@ -133,11 +138,15 @@ export const Detalle = (props) => {
       },
       {
         field: "subTotal",
+        editable: false,
         valueGetter: (params) => {
           const data = params.data;
           const val = parseFloat(data.precio ?? 0) * parseFloat(data.cantidad ?? 0);
           return isNaN(val) ? 0 : val.toFixed(2);
         },
+        valueFormatter: (params) => {
+          return 'C$' + params.value;
+        }
       },
     ],
     [tipoTrabajos]
@@ -162,7 +171,7 @@ export const Detalle = (props) => {
                   onBlur={formik.handleBlur}
                   margin="dense"
                   variant="standard"
-                  disabled={isEdit}
+                // disabled={isEdit}
                 >
                   {clientes.map((option) => (
                     <MenuItem value={option.id}>{option.nombre}</MenuItem>
@@ -175,14 +184,14 @@ export const Detalle = (props) => {
                   label="Forma de pago"
                   name="tipoPagoId"
                   select
-                  value={formik.values.empresaId}
+                  value={formik.values.tipoPagoId}
                   onChange={formik.handleChange}
                   error={Boolean(formik.touched.tipoPagoId && formik.errors.tipoPagoId)}
                   helperText={formik.touched.tipoPagoId && formik.errors.tipoPagoId}
                   onBlur={formik.handleBlur}
                   margin="dense"
                   variant="standard"
-                  disabled={isEdit}
+                // disabled={isEdit}
                 >
                   {tipoPagos.map((option) => (
                     <MenuItem value={option.id}>{option.nombre}</MenuItem>
@@ -202,50 +211,13 @@ export const Detalle = (props) => {
                   onBlur={formik.handleBlur}
                   margin="dense"
                   variant="standard"
-                  disabled={isEdit}
+                // disabled={isEdit}
                 >
                   {empleados.map((option) => (
                     <MenuItem value={option.id}>{option.nombre}</MenuItem>
                   ))}
                 </TextField>
               </Grid>
-              {/* <Grid item md={6} xs={12} classes={{ item: classes.item }}>
-                <TextField
-                  fullWidth
-                  label="Nombre"
-                  name="nombre"
-                  type="text"
-                  value={formik.values.nombre}
-                  onChange={formik.handleChange}
-                  error={Boolean(formik.touched.nombre && formik.errors.nombre)}
-                  helperText={formik.touched.nombre && formik.errors.nombre}
-                  onBlur={formik.handleBlur}
-                  margin="dense"
-                  variant="standard"
-                />
-              </Grid>
-              <Grid item md={6} xs={12} classes={{ item: classes.item }}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label="Fecha"
-                    name="fecha"
-                    value={formik.values.fecha}
-                    onChange={(val) => {
-                      formik.setFieldValue("fecha", val);
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        name="fecha"
-                        fullWidth
-                        margin="dense"
-                        disabled
-                        variant="standard"
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-              </Grid> */}
             </Grid>
           </CardContent>
           <Divider />
@@ -288,6 +260,12 @@ export const Detalle = (props) => {
           }}
           components={{
             selectRenderer: SelectRenderer,
+            inputNumericRenderer: InputNumericRenderer,
+            statusBarComponent: StatusBarComponent
+          }}
+          
+          statusBar={{
+            statusPanels: [{ statusPanel: 'statusBarComponent' }]
           }}
           onGridReady={(params) => {
             params.api.sizeColumnsToFit();

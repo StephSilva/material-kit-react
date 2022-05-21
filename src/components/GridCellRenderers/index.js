@@ -1,6 +1,7 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { MenuItem, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles({
   select: {
@@ -45,5 +46,35 @@ export const SelectRenderer = forwardRef((props, ref) => {
         <MenuItem value={option.value}>{option.label}</MenuItem>
       ))}
     </TextField>
+  );
+});
+
+export const InputNumericRenderer = forwardRef((props, ref) => {
+  const classes = useStyles();
+
+  const [value, setValue] = useState(props.value);
+
+  useImperativeHandle(ref, () => {
+    return {
+      getValue() {
+        return value;
+      },
+    };
+  });
+
+  return (
+    <NumberFormat
+      value={value}
+      thousandSeparator={true}
+      allowNegative={false}
+      allowLeadingZeros={false}
+      onValueChange={(values, sourceInfo) => {
+        props.setValue(values.floatValue);
+        setValue(values.floatValue);
+      }}
+      prefix={props.noPrefix ? "" : "C$"}
+      className="some"
+      inputmode="numeric"
+    />
   );
 });

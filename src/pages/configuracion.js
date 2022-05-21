@@ -21,9 +21,9 @@ const Settings = () => (
           Configuracion
         </Typography>
         <Catalogos />
-        <Box sx={{ pt: 3 }}>
+        {/* <Box sx={{ pt: 3 }}>
           <SettingsPassword />
-        </Box>
+        </Box> */}
       </Container>
     </Box>
   </>

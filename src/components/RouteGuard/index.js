@@ -9,8 +9,6 @@ function RouteGuard({ children }) {
   const [authorized, setAuthorized] = useState(false);
   const { logeado } = useStore();
 
-  console.log({ logeado });
-
   useEffect(() => {
     // on initial load - run auth check
     authCheck(router.asPath);

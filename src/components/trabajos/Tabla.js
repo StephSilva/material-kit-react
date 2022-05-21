@@ -63,7 +63,7 @@ export const Tabla = ({ informacion, refrescar, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {informacion.slice(0, limit).map((fila) => (
+              {informacion.slice(page * limit, (limit + page * limit)).map((fila) => (
                 <TableRow hover>
                   <TableCell>{fila.cliente.nombre}</TableCell>
                   <TableCell>{fila.empleado.nombre}</TableCell>

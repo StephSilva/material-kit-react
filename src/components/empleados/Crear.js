@@ -77,8 +77,6 @@ export default function CrearUsuario({ open, handleClose }) {
     }
   });
 
-  console.log({ values: formik.values, errors: formik.errors, isValid: formik.isValid });
-
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Crear Empleado</DialogTitle>
