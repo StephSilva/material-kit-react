@@ -46,7 +46,13 @@ export const Tabla = ({ informacion, refrescar, ...rest }) => {
     }
   };
 
-  const getTotal = () => 0;
+  const getTotal = (fila) => {
+    let total = 0;
+   fila.trabajosRealizados.forEach(trabajo=>{
+    total = total + trabajo.cantidad * trabajo.precio;
+   });
+   return total
+  };
 
   return (
     <Card {...rest}>
@@ -68,7 +74,7 @@ export const Tabla = ({ informacion, refrescar, ...rest }) => {
                   <TableCell>{fila.cliente.nombre}</TableCell>
                   <TableCell>{fila.empleado.nombre}</TableCell>
                   <TableCell>{fila.tipoPago.nombre}</TableCell>
-                  <TableCell>{getTotal()}</TableCell>
+                  <TableCell>{getTotal(fila)}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => router.push(`/trabajos/${fila.id}`)}>
                       <EditIcon style={{ color: "blue" }} />

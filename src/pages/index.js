@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react';
 import instanciaAxios from 'src/utils/instancia-axios';
 import { toast } from 'react-toastify';
 
+let timer = null;
+
 const Customers = () => {
   const [clientes,setClientes]=useState([]);
 
@@ -15,9 +17,13 @@ const Customers = () => {
     obtenerClientes();
   },[])
 
-  const obtenerClientes = async () => {
+  const obtenerClientes = async (textBuscar = "") => {
     try {
-      const clientes = await instanciaAxios.get("/cliente");
+      const clientes = await instanciaAxios.get("/cliente",{
+        params:{
+          filtro: textBuscar
+        }
+      });
       setClientes(clientes.data);
       if(clientes.data.length === 0){
         toast.warning("No se encontraron clientes")
@@ -26,6 +32,13 @@ const Customers = () => {
       toast.error("Error al obtener los clientes")
     }
   }
+
+  const onBuscar = (evento) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      obtenerClientes(evento.target.value);
+    }, 800);
+  };
 
   return (
     <>
@@ -42,7 +55,7 @@ const Customers = () => {
         }}
       >
         <Container maxWidth={false}>
-          <CustomerListToolbar refrescar={obtenerClientes} />
+          <CustomerListToolbar refrescar={obtenerClientes} onBuscar={onBuscar} />
           <Box sx={{ mt: 3 }}>
             <CustomerListResults clientes={clientes} refrescar={obtenerClientes} />
           </Box>

@@ -23,7 +23,11 @@ const Empleados = () => {
 
   const obtenerInformacion = async (textBuscar = "") => {
     try {
-      const respuesta = await instanciaAxios.get("/empleado");
+      const respuesta = await instanciaAxios.get("/empleado",{
+        params:{
+          filtro: textBuscar
+        }
+      });
       setInformacion(respuesta.data);
       if (respuesta.data.length === 0) {
         toast.warning("No se encontraron empleados");
@@ -43,7 +47,7 @@ const Empleados = () => {
   return (
     <>
       <Head>
-        <title>Clientes</title>
+        <title>Empleado</title>
       </Head>
       <Box
         component="main"

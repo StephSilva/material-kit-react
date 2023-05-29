@@ -2,13 +2,14 @@ import { useEffect } from "react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import { Box, Drawer, useMediaQuery } from "@mui/material";
+import { Box, Button, Drawer, useMediaQuery } from "@mui/material";
 import { Cog as CogIcon } from "../icons/cog";
 import { ShoppingBag as ShoppingBagIcon } from "../icons/shopping-bag";
 import { User as UserIcon } from "../icons/user";
 import { Users as UsersIcon } from "../icons/users";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import { NavItem } from "./nav-item";
+import { useStore } from "src/utils/store";
 
 const items = [
   {
@@ -40,6 +41,7 @@ const items = [
 
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
+  const {setLogeado} = useStore();
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"), {
     defaultMatches: true,
@@ -93,6 +95,14 @@ export const DashboardSidebar = (props) => {
           {items.map((item) => (
             <NavItem key={item.title} icon={item.icon} href={item.href} title={item.title} />
           ))}
+          <Button onClick={() => {
+              setLogeado(false);
+              setTimeout(() => {
+                router.push("/login");
+              }, 1000);
+          }}>
+              cerrar sesion
+          </Button>
         </Box>
       </Box>
     </>

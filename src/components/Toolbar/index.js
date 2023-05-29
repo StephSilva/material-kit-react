@@ -38,7 +38,7 @@ export const Toolbar = (props) => {
             <Box sx={{ maxWidth: soloBuscar ? "100%" : 500 }}>
               <TextField
                 fullWidth
-                onChange={onBuscar}
+                onChange={props.onBuscar}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">

@@ -9,6 +9,8 @@ import { Toolbar } from "src/components/Toolbar";
 import { Tabla } from "src/components/trabajos/Tabla";
 import { useRouter } from "next/router";
 
+let timer = null;
+
 const Customers = () => {
   const [clientes, setClientes] = useState([]);
   const router = useRouter();
@@ -26,7 +28,12 @@ const Customers = () => {
     }
   };
 
-  const onBuscar = () => {};
+  const onBuscar = (evento) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      obtenerClientes(evento.target.value);
+    }, 800);
+  };
 
   return (
     <>
