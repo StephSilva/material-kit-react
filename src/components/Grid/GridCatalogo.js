@@ -13,10 +13,12 @@ export default function GridCatalogo(props) {
   const gridRef = useRef();
   const [gridData, setGridData] = useState([]);
 
-  useMount(async () => {
+  useMount(() => getData());
+
+  const getData = async () => {
     const data = await instanciaAxios.get(endpoint);
     setGridData(data.data?.map((data) => ({ ...data, esNuevo: false })));
-  });
+  };
 
   return (
     <Box className="ag-theme-alpine" sx={{ width: "100%", height: 200 }}>
@@ -55,6 +57,7 @@ export default function GridCatalogo(props) {
             } catch (error) {
               //
             } finally {
+              await getData();
               gridRef.current.api.hideOverlay();
             }
           }}

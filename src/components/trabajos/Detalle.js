@@ -122,9 +122,12 @@ export const Detalle = (props) => {
   const columnDefs = useMemo(
     () => [
       {
-        field: "cantidad", cellRenderer: "inputNumericRenderer", editable: false, cellRendererParams: {
+        field: "cantidad",
+        cellRenderer: "inputNumericRenderer",
+        editable: false,
+        cellRendererParams: {
           noPrefix: true,
-        }
+        },
       },
       { field: "precio", cellRenderer: "inputNumericRenderer", editable: false },
       {
@@ -145,8 +148,8 @@ export const Detalle = (props) => {
           return isNaN(val) ? 0 : val.toFixed(2);
         },
         valueFormatter: (params) => {
-          return 'C$' + params.value;
-        }
+          return "C$" + params.value;
+        },
       },
     ],
     [tipoTrabajos]
@@ -171,7 +174,7 @@ export const Detalle = (props) => {
                   onBlur={formik.handleBlur}
                   margin="dense"
                   variant="standard"
-                // disabled={isEdit}
+                  // disabled={isEdit}
                 >
                   {clientes.map((option) => (
                     <MenuItem value={option.id}>{option.nombre}</MenuItem>
@@ -191,7 +194,7 @@ export const Detalle = (props) => {
                   onBlur={formik.handleBlur}
                   margin="dense"
                   variant="standard"
-                // disabled={isEdit}
+                  // disabled={isEdit}
                 >
                   {tipoPagos.map((option) => (
                     <MenuItem value={option.id}>{option.nombre}</MenuItem>
@@ -211,10 +214,10 @@ export const Detalle = (props) => {
                   onBlur={formik.handleBlur}
                   margin="dense"
                   variant="standard"
-                // disabled={isEdit}
+                  // disabled={isEdit}
                 >
                   {empleados.map((option) => (
-                    <MenuItem value={option.id}>{option.nombre}</MenuItem>
+                    <MenuItem value={option.id}>{option.nombre + " " + option.apellido}</MenuItem>
                   ))}
                 </TextField>
               </Grid>
@@ -261,11 +264,10 @@ export const Detalle = (props) => {
           components={{
             selectRenderer: SelectRenderer,
             inputNumericRenderer: InputNumericRenderer,
-            statusBarComponent: StatusBarComponent
+            statusBarComponent: StatusBarComponent,
           }}
-          
           statusBar={{
-            statusPanels: [{ statusPanel: 'statusBarComponent' }]
+            statusPanels: [{ statusPanel: "statusBarComponent" }],
           }}
           onGridReady={(params) => {
             params.api.sizeColumnsToFit();
